@@ -18,10 +18,6 @@ app.get('/blog', (req, res) =>{
 
 */
 
-app.listen(3001, ()=> {
-    console.log('Node API app is running on port 3001')
-})
-
 //Get data from database
 
 app.get('/events', async(req, res) => {
