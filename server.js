@@ -20,15 +20,29 @@ app.get('/blog', (req, res) =>{
 
 //Get data from database
 
-app.get('/events', async(req, res) => {
-    try{
-        const events = await Event.find({});
-        res.status(200).json(events);
-    } catch(error) {
-        res.status(500).json({message: error.message})
-    }
-})
+app.get('/events', async (req, res) => {
+    try {
+        const { category } = req.query;
 
+        // Validate category if provided
+        const allowedCategories = ["Music", "Art", "Sports", "Tech", "Education", "Other"];
+        if (category && !allowedCategories.includes(category)) {
+            return res.status(400).json({
+                message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,
+            });
+        }
+
+        // Build the filter object
+        const filter = category ? { category } : {};
+
+        // Fetch events from the database with optional category filtering
+        const events = await Event.find(filter);
+
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 //Get data by id from database
 
 app.get('/events/:id', async(req, res) => {
@@ -43,32 +57,69 @@ app.get('/events/:id', async(req, res) => {
 
 //Post data in database
 
-app.post('/events', async(req,res) => {
+app.post('/events', async (req, res) => {
     try {
-        const event = await Event.create(req.body)
-        res.status(200).json(event);
-    } 
-    catch (error) {
-        console.log(error.message)
-        res.status(500).json({message: error.message})
-    }  
-})
+        const { category } = req.body;
 
+        // Validate category manually against the allowed values
+        const allowedCategories = ["Music", "Sports", "Theatre", "Dance", "Workshop" ];
+        if (!allowedCategories.includes(category)) {
+            return res.status(400).json({
+                message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,
+            });
+        }
+
+        // Create the event after validation
+        const event = await Event.create(req.body);
+        res.status(201).json(event);
+    } catch (error) {
+        console.log(error.message);
+
+        // Handle validation errors or other exceptions
+        if (error.name === "ValidationError") {
+            const messages = Object.values(error.errors).map((err) => err.message);
+            return res.status(400).json({ message: messages.join(", ") });
+        }
+
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//update a Event
 //update a Event
 app.put('/events/:id', async(req, res) =>{
     try {
         const{id} = req.params;
-        const event = await Event.findByIdAndUpdate(id, req.body);
-        // we cannot find any Event in database
-        if (!event) {
-            return res.status(404).json({message: 'Event with id: ${id} not found.'})
+        const {category} = req.body;
+        // Check if ID is valid
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid Event ID' });
         }
-        const updatedEvent = await Event.findById(id);
+
+        // Validate category against allowed values
+        const allowedCategories = ["Music", "Sports", "Theatre", "Dance", "Workshop" ];	
+        if (category && !allowedCategories.includes(category)) {
+            return res.status(400).json({
+                message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,
+            });
+        }
+
+        // Update the event and run validators
+        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { 
+            new: true,       // Return the updated document
+            runValidators: true // Ensure validation rules are applied
+        });
+
+        // Check if the event exists
+        if (!updatedEvent) {
+            return res.status(404).json({ message: `Event with ID: ${id} not found.` });
+        }
+
         res.status(200).json(updatedEvent);
     } catch (error) {
-        res.status(500).json({message: error.message})
+        res.status(500).json({ message: error.message });
     }
-})
+}); 
 
 //delete a Event
 app.delete('/events/:id', async(req, res) => {
