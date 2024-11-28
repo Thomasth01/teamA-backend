@@ -6,17 +6,25 @@ const eventSchema = mongoose.Schema(
                  type: String,
                  required: [true, "Please enter a event"]
         },
-        city: {
+        location: {
                 type: String,
-                required: [true, "Please enter the city of the event"]
+                required: [true, "Please enter the location of the event"],
+                default: "TBA"
+        },
+        date: {
+                type: Date,
+                required: [true, "Please enter the date of the event"],
+                default: "TBA"
         },
         category: {
                 type: String,
-                required: [true, "Please enter the genre of the event"]
+                required: [true, "Please enter the category of the event"],
+                enum: ["Music", "Sports", "Theatre", "Dance", "Workshop" ]
         },
         ticket_price: {
                 type: Number,
                 required: true,
+                default: 0
         },
         event_image: {
                 type: String,
