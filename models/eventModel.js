@@ -20,7 +20,7 @@ const eventSchema = mongoose.Schema(
         category: {
                 type: String,
                 required: [true, "Please enter the category of the event"],
-                enum: ["Music", "Sports", "Theatre", "Dance", "Workshop" ]
+                enum: ["Music", "Sports", "Theatre", "Dance", "Workshop","Cinema"],
         },
         ticket_price: {
                 type: Number,

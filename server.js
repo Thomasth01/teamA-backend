@@ -6,17 +6,6 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-/*
-
-app.get('/', (req, res) =>{ 
-    res.send('Hello NODE API')
-})
-
-app.get('/blog', (req, res) =>{
-    res.send('Hello Blog, My name is devtamin')
-})
-
-*/
 
 //Get data from database
 
@@ -57,6 +46,17 @@ app.get('/events/:id', async(req, res) => {
         res.status(500).json({message: error.message})
     }
 })
+
+//Get data by category from database
+app.get('/events/Category/:category', async (req, res) => {
+    const category = req.params.category;
+    try {
+        const events = await Event.find({ category });
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 //Post data in database
 
