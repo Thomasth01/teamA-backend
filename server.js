@@ -65,7 +65,7 @@ app.post('/events', async (req, res) => {
         const { category } = req.body;
 
         // Validate category manually against the allowed values
-        const allowedCategories = ["Music", "Sports", "Theatre", "Dance", "Workshop" ];
+        const allowedCategories = ["Music", "Sports", "Theatre", "Dance", "Workshop", "Cinema"];	
         if (!allowedCategories.includes(category)) {
             return res.status(500).json({
                 message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,
