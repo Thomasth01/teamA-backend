@@ -14,7 +14,7 @@ app.get('/events', async (req, res) => {
         const { category } = req.query;
 
         // Validate category if provided
-        const allowedCategories = ["Music", "Art", "Sports", "Tech", "Education", "Other"];
+        const allowedCategories = ["Music", "Dance", "Cinema", "Theatre", "Workshop"];
         if (category && !allowedCategories.includes(category)) {
             return res.status(500).json({
                 message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,
@@ -99,7 +99,7 @@ app.put('/events/:id', async(req, res) =>{
         }
 
         // Validate category against allowed values
-        const allowedCategories = ["Music", "Sports", "Theatre", "Dance", "Workshop" ];	
+        const allowedCategories = ["Music", "Cinema", "Theatre", "Dance", "Workshop" ];	
         if (category && !allowedCategories.includes(category)) {
             return res.status(500).json({
                 message: `Invalid category. Allowed categories are: ${allowedCategories.join(", ")}`,

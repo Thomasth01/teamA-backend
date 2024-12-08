@@ -13,14 +13,14 @@ const eventSchema = mongoose.Schema(
                 default: "TBA"
         },
         date: {
-                type: Date,
+                type: String,
                 required: [true, "Please enter the date of the event"],
-                default: "TBA"
+                default: "TBA",
         },
         category: {
                 type: String,
                 required: [true, "Please enter the category of the event"],
-                enum: ["Music", "Sports", "Theatre", "Dance", "Workshop","Cinema"],
+                enum: ["Music", "Theatre", "Dance", "Workshop","Cinema"],
         },
         ticket_price: {
                 type: Number,
@@ -30,6 +30,11 @@ const eventSchema = mongoose.Schema(
         event_image: {
                 type: String,
                 required: false,
+        },
+        description: {
+                type: String,
+                required: false,
+                default: "No description available"
         }
     },
     {
